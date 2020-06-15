@@ -46,7 +46,6 @@ class Shodan:
     """
 
     class Data:
-
         def __init__(self, parent):
             self.parent = parent
 
@@ -55,17 +54,16 @@ class Shodan:
 
             :returns: A list of objects where every object describes a dataset
             """
-            return self.parent._request('/shodan/data', {})
+            return self.parent._request("/shodan/data", {})
 
         def list_files(self, dataset):
             """Returns a list of files that belong to the given dataset.
 
             :returns: A list of objects where each object contains a 'name', 'size', 'timestamp' and 'url'
             """
-            return self.parent._request('/shodan/data/{}'.format(dataset), {})
+            return self.parent._request("/shodan/data/{}".format(dataset), {})
 
     class Dns:
-
         def __init__(self, parent):
             self.parent = parent
 
@@ -73,19 +71,18 @@ class Shodan:
             """Grab the DNS information for a domain.
             """
             args = {
-                'page': page,
+                "page": page,
             }
             if history:
-                args['history'] = history
+                args["history"] = history
             if type:
-                args['type'] = type
-            return self.parent._request('/dns/domain/{}'.format(domain), args)
+                args["type"] = type
+            return self.parent._request("/dns/domain/{}".format(domain), args)
 
     class Notifier:
-
         def __init__(self, parent):
             self.parent = parent
-        
+
         def create(self, provider, args, description=None):
             """Get the settings for the specified notifier that a user has configured.
 
@@ -97,13 +94,13 @@ class Shodan:
             :type description: str
             :returns: dict -- fields are 'success' and 'id' of the notifier
             """
-            args['provider'] = provider
+            args["provider"] = provider
 
             if description:
-                args['description'] = description
-            
-            return self.parent._request('/notifier', args, method='post')
-        
+                args["description"] = description
+
+            return self.parent._request("/notifier", args, method="post")
+
         def edit(self, nid, args):
             """Get the settings for the specified notifier that a user has configured.
 
@@ -113,8 +110,8 @@ class Shodan:
             :type args: dict
             :returns: dict -- fields are 'success' and 'id' of the notifier
             """
-            return self.parent._request('/notifier/{}'.format(nid), args, method='put')
-        
+            return self.parent._request("/notifier/{}".format(nid), args, method="put")
+
         def get(self, nid):
             """Get the settings for the specified notifier that a user has configured.
 
@@ -122,22 +119,22 @@ class Shodan:
             :type nid: str
             :returns: dict -- object describing the notifier settings
             """
-            return self.parent._request('/notifier/{}'.format(nid), {})
+            return self.parent._request("/notifier/{}".format(nid), {})
 
         def list_notifiers(self):
             """Returns a list of notifiers that the user has added.
 
             :returns: A list of notifierse that are available on the account
             """
-            return self.parent._request('/notifier', {})
+            return self.parent._request("/notifier", {})
 
         def list_providers(self):
             """Returns a list of supported notification providers.
 
             :returns: A list of providers where each object describes a provider
             """
-            return self.parent._request('/notifier/provider', {})
-        
+            return self.parent._request("/notifier/provider", {})
+
         def remove(self, nid):
             """Delete the provided notifier.
 
@@ -145,10 +142,9 @@ class Shodan:
             :type nid: str
             :returns: dict -- 'success' set to True if action succeeded
             """
-            return self.parent._request('/notifier/{}'.format(nid), {}, method='delete')
+            return self.parent._request("/notifier/{}".format(nid), {}, method="delete")
 
     class Tools:
-
         def __init__(self, parent):
             self.parent = parent
 
@@ -157,10 +153,9 @@ class Shodan:
 
             :returns: str -- your IP address
             """
-            return self.parent._request('/tools/myip', {})
+            return self.parent._request("/tools/myip", {})
 
     class Exploits:
-
         def __init__(self, parent):
             self.parent = parent
 
@@ -177,13 +172,13 @@ class Shodan:
             :returns: dict -- a dictionary containing the results of the search.
             """
             query_args = {
-                'query': query,
-                'page': page,
+                "query": query,
+                "page": page,
             }
             if facets:
-                query_args['facets'] = create_facet_string(facets)
+                query_args["facets"] = create_facet_string(facets)
 
-            return self.parent._request('/api/search', query_args, service='exploits')
+            return self.parent._request("/api/search", query_args, service="exploits")
 
         def count(self, query, facets=None):
             """Search the entire Shodan Exploits archive but only return the total # of results,
@@ -197,15 +192,14 @@ class Shodan:
 
             """
             query_args = {
-                'query': query,
+                "query": query,
             }
             if facets:
-                query_args['facets'] = create_facet_string(facets)
+                query_args["facets"] = create_facet_string(facets)
 
-            return self.parent._request('/api/count', query_args, service='exploits')
+            return self.parent._request("/api/count", query_args, service="exploits")
 
     class Labs:
-
         def __init__(self, parent):
             self.parent = parent
 
@@ -217,10 +211,9 @@ class Shodan:
 
             :returns: int -- honeyscore ranging from 0.0 to 1.0
             """
-            return self.parent._request('/labs/honeyscore/{}'.format(ip), {})
+            return self.parent._request("/labs/honeyscore/{}".format(ip), {})
 
     class Organization:
-
         def __init__(self, parent):
             self.parent = parent
 
@@ -234,14 +227,14 @@ class Shodan:
 
             :returns: True if it succeeded and raises an Exception otherwise
             """
-            return self.parent._request('/org/member/{}'.format(user), {
-                'notify': notify,
-            }, method='PUT')['success']
+            return self.parent._request(
+                "/org/member/{}".format(user), {"notify": notify,}, method="PUT"
+            )["success"]
 
         def info(self):
             """Returns general information about the organization the current user is a member of.
             """
-            return self.parent._request('/org', {})
+            return self.parent._request("/org", {})
 
         def remove_member(self, user):
             """Remove the user from the organization.
@@ -251,7 +244,9 @@ class Shodan:
 
             :returns: True if it succeeded and raises an Exception otherwise
             """
-            return self.parent._request('/org/member/{}'.format(user), {}, method='DELETE')['success']
+            return self.parent._request(
+                "/org/member/{}".format(user), {}, method="DELETE"
+            )["success"]
 
     def __init__(self, key, proxies=None):
         """Initializes the API object.
@@ -262,8 +257,8 @@ class Shodan:
         :type proxies: dict
         """
         self.api_key = key
-        self.base_url = 'https://api.shodan.io'
-        self.base_exploits_url = 'https://exploits.shodan.io'
+        self.base_url = "https://api.shodan.io"
+        self.base_exploits_url = "https://exploits.shodan.io"
         self.data = self.Data(self)
         self.dns = self.Dns(self)
         self.exploits = self.Exploits(self)
@@ -277,7 +272,7 @@ class Shodan:
             self._session.proxies.update(proxies)
             self._session.trust_env = False
 
-    def _request(self, function, params, service='shodan', method='get'):
+    def _request(self, function, params, service="shodan", method="get"):
         """General-purpose function to create web requests to SHODAN.
 
         Arguments:
@@ -289,55 +284,54 @@ class Shodan:
 
         """
         # Add the API key parameter automatically
-        params['key'] = self.api_key
+        params["key"] = self.api_key
 
         # Determine the base_url based on which service we're interacting with
-        base_url = {
-            'shodan': self.base_url,
-            'exploits': self.base_exploits_url,
-        }.get(service, 'shodan')
+        base_url = {"shodan": self.base_url, "exploits": self.base_exploits_url,}.get(
+            service, "shodan"
+        )
 
         # Send the request
         try:
             method = method.lower()
-            if method == 'post':
+            if method == "post":
                 data = self._session.post(base_url + function, params)
-            elif method == 'put':
+            elif method == "put":
                 data = self._session.put(base_url + function, params=params)
-            elif method == 'delete':
+            elif method == "delete":
                 data = self._session.delete(base_url + function, params=params)
             else:
                 data = self._session.get(base_url + function, params=params)
         except Exception:
-            raise APIError('Unable to connect to Shodan')
+            raise APIError("Unable to connect to Shodan")
 
         # Check that the API key wasn't rejected
         if data.status_code == 401:
             try:
                 # Return the actual error message if the API returned valid JSON
-                error = data.json()['error']
+                error = data.json()["error"]
             except Exception as e:
                 # If the response looks like HTML then it's probably the 401 page that nginx returns
                 # for 401 responses by default
-                if data.text.startswith('<'):
-                    error = 'Invalid API key'
+                if data.text.startswith("<"):
+                    error = "Invalid API key"
                 else:
                     # Otherwise lets raise the error message
-                    error = u'{}'.format(e)
+                    error = u"{}".format(e)
 
             raise APIError(error)
         elif data.status_code == 403:
-            raise APIError('Access denied (403 Forbidden)')
+            raise APIError("Access denied (403 Forbidden)")
 
         # Parse the text into JSON
         try:
             data = data.json()
         except ValueError:
-            raise APIError('Unable to parse JSON response')
+            raise APIError("Unable to parse JSON response")
 
         # Raise an exception if an error occurred
-        if type(data) == dict and 'error' in data:
-            raise APIError(data['error'])
+        if type(data) == dict and "error" in data:
+            raise APIError(data["error"])
 
         # Return the data
         return data
@@ -353,11 +347,11 @@ class Shodan:
         :returns: A dictionary with 1 main property: total. If facets have been provided then another property called "facets" will be available at the top-level of the dictionary. Visit the website for more detailed information.
         """
         query_args = {
-            'query': query,
+            "query": query,
         }
         if facets:
-            query_args['facets'] = create_facet_string(facets)
-        return self._request('/shodan/host/count', query_args)
+            query_args["facets"] = create_facet_string(facets)
+        return self._request("/shodan/host/count", query_args)
 
     def host(self, ips, history=False, minify=False):
         """Get all available information on an IP.
@@ -374,30 +368,30 @@ class Shodan:
 
         params = {}
         if history:
-            params['history'] = history
+            params["history"] = history
         if minify:
-            params['minify'] = minify
-        return self._request('/shodan/host/%s' % ','.join(ips), params)
+            params["minify"] = minify
+        return self._request("/shodan/host/%s" % ",".join(ips), params)
 
     def info(self):
         """Returns information about the current API key, such as a list of add-ons
         and other features that are enabled for the current user's API plan.
         """
-        return self._request('/api-info', {})
+        return self._request("/api-info", {})
 
     def ports(self):
         """Get a list of ports that Shodan crawls
 
         :returns: An array containing the ports that Shodan crawls for.
         """
-        return self._request('/shodan/ports', {})
+        return self._request("/shodan/ports", {})
 
     def protocols(self):
         """Get a list of protocols that the Shodan on-demand scanning API supports.
 
         :returns: A dictionary containing the protocol name and description.
         """
-        return self._request('/shodan/protocols', {})
+        return self._request("/shodan/protocols", {})
 
     def scan(self, ips, force=False):
         """Scan a network using Shodan
@@ -424,14 +418,14 @@ class Shodan:
         if isinstance(ips, dict):
             networks = json.dumps(ips)
         else:
-            networks = ','.join(ips)
+            networks = ",".join(ips)
 
         params = {
-            'ips': networks,
-            'force': force,
+            "ips": networks,
+            "force": force,
         }
 
-        return self._request('/shodan/scan', params, method='post')
+        return self._request("/shodan/scan", params, method="post")
 
     def scans(self, page=1):
         """Get a list of scans submitted
@@ -439,9 +433,7 @@ class Shodan:
         :param page: Page through the list of scans 100 results at a time
         :type page: int
         """
-        return self._request('/shodan/scans', {
-            'page': page,
-        })
+        return self._request("/shodan/scans", {"page": page,})
 
     def scan_internet(self, port, protocol):
         """Scan a network using Shodan
@@ -454,11 +446,11 @@ class Shodan:
         :returns: A dictionary with a unique ID to check on the scan progress.
         """
         params = {
-            'port': port,
-            'protocol': protocol,
+            "port": port,
+            "protocol": protocol,
         }
 
-        return self._request('/shodan/scan/internet', params, method='post')
+        return self._request("/shodan/scan/internet", params, method="post")
 
     def scan_status(self, scan_id):
         """Get the status information about a previously submitted scan.
@@ -468,7 +460,7 @@ class Shodan:
 
         :returns: A dictionary with general information about the scan, including its status in getting processed.
         """
-        return self._request('/shodan/scan/%s' % scan_id, {})
+        return self._request("/shodan/scan/%s" % scan_id, {})
 
     def search(self, query, page=1, limit=None, offset=None, facets=None, minify=True):
         """Search the SHODAN database.
@@ -489,22 +481,22 @@ class Shodan:
         :returns: A dictionary with 2 main items: matches and total. If facets have been provided then another property called "facets" will be available at the top-level of the dictionary. Visit the website for more detailed information.
         """
         args = {
-            'query': query,
-            'minify': minify,
+            "query": query,
+            "minify": minify,
         }
         if limit:
-            args['limit'] = limit
+            args["limit"] = limit
             if offset:
-                args['offset'] = offset
+                args["offset"] = offset
         else:
-            args['page'] = page
+            args["page"] = page
 
         if facets:
-            args['facets'] = create_facet_string(facets)
+            args["facets"] = create_facet_string(facets)
 
-        return self._request('/shodan/host/search', args)
+        return self._request("/shodan/host/search", args)
 
-    def search_cursor(self, query, minify=True, retries=5, skip=0):
+    def search_cursor(self, query, minify=True, retries=100000, skip=0):
         """Search the SHODAN database.
 
         This method returns an iterator that can directly be in a loop. Use it when you want to loop over
@@ -528,8 +520,8 @@ class Shodan:
 
         # Placeholder results object to make the while loop below easier
         results = {
-            'matches': [True],
-            'total': None,
+            "matches": [True],
+            "total": None,
         }
 
         # Convert the number of skipped records into a page number
@@ -538,10 +530,10 @@ class Shodan:
             # the cursor to skip to.
             page += int(skip / 100)
 
-        while results['matches']:
+        while results["matches"]:
             try:
                 results = self.search(query, minify=minify, page=page)
-                for banner in results['matches']:
+                for banner in results["matches"]:
                     try:
                         yield banner
                     except GeneratorExit:
@@ -551,24 +543,26 @@ class Shodan:
             except Exception:
                 # We've retried several times but it keeps failing, so lets error out
                 if tries >= retries:
-                    raise APIError('Retry limit reached ({:d})'.format(retries))
+                    raise APIError("Retry limit reached ({:d})".format(retries))
 
                 tries += 1
-                time.sleep(1.0)  # wait 1 second if the search errored out for some reason
+                time.sleep(
+                    1.0
+                )  # wait 1 second if the search errored out for some reason
 
     def search_facets(self):
         """Returns a list of search facets that can be used to get aggregate information about a search query.
 
         :returns: A list of strings where each is a facet name
         """
-        return self._request('/shodan/host/search/facets', {})
+        return self._request("/shodan/host/search/facets", {})
 
     def search_filters(self):
         """Returns a list of search filters that are available.
 
         :returns: A list of strings where each is a filter name
         """
-        return self._request('/shodan/host/search/filters', {})
+        return self._request("/shodan/host/search/filters", {})
 
     def search_tokens(self, query):
         """Returns information about the search query itself (filters used etc.)
@@ -579,18 +573,18 @@ class Shodan:
         :returns: A dictionary with 4 main properties: filters, errors, attributes and string.
         """
         query_args = {
-            'query': query,
+            "query": query,
         }
-        return self._request('/shodan/host/search/tokens', query_args)
+        return self._request("/shodan/host/search/tokens", query_args)
 
     def services(self):
         """Get a list of services that Shodan crawls
 
         :returns: A dictionary containing the ports/ services that Shodan crawls for. The key is the port number and the value is the name of the service.
         """
-        return self._request('/shodan/services', {})
+        return self._request("/shodan/services", {})
 
-    def queries(self, page=1, sort='timestamp', order='desc'):
+    def queries(self, page=1, sort="timestamp", order="desc"):
         """List the search queries that have been shared by other users.
 
         :param page: Page number to iterate over results; each page contains 10 items
@@ -603,11 +597,11 @@ class Shodan:
         :returns: A list of saved search queries (dictionaries).
         """
         args = {
-            'page': page,
-            'sort': sort,
-            'order': order,
+            "page": page,
+            "sort": sort,
+            "order": order,
         }
-        return self._request('/shodan/query', args)
+        return self._request("/shodan/query", args)
 
     def queries_search(self, query, page=1):
         """Search the directory of saved search queries in Shodan.
@@ -620,10 +614,10 @@ class Shodan:
         :returns: A list of saved search queries (dictionaries).
         """
         args = {
-            'page': page,
-            'query': query,
+            "page": page,
+            "query": query,
         }
-        return self._request('/shodan/query/search', args)
+        return self._request("/shodan/query/search", args)
 
     def queries_tags(self, size=10):
         """Search the directory of saved search queries in Shodan.
@@ -634,9 +628,9 @@ class Shodan:
         :returns: A list of tags.
         """
         args = {
-            'size': size,
+            "size": size,
         }
-        return self._request('/shodan/query/tags', args)
+        return self._request("/shodan/query/tags", args)
 
     def create_alert(self, name, ip, expires=0):
         """Create a network alert/ private firehose for the specified IP range(s)
@@ -649,15 +643,19 @@ class Shodan:
         :returns: A dict describing the alert
         """
         data = {
-            'name': name,
-            'filters': {
-                'ip': ip,
-            },
-            'expires': expires,
+            "name": name,
+            "filters": {"ip": ip,},
+            "expires": expires,
         }
 
-        response = api_request(self.api_key, '/shodan/alert', data=data, params={}, method='post',
-                               proxies=self._session.proxies)
+        response = api_request(
+            self.api_key,
+            "/shodan/alert",
+            data=data,
+            params={},
+            method="post",
+            proxies=self._session.proxies,
+        )
 
         return response
 
@@ -672,35 +670,47 @@ class Shodan:
         :returns: A dict describing the alert
         """
         data = {
-            'filters': {
-                'ip': ip,
-            },
+            "filters": {"ip": ip,},
         }
 
-        response = api_request(self.api_key, '/shodan/alert/{}'.format(aid), data=data, params={}, method='post',
-                               proxies=self._session.proxies)
+        response = api_request(
+            self.api_key,
+            "/shodan/alert/{}".format(aid),
+            data=data,
+            params={},
+            method="post",
+            proxies=self._session.proxies,
+        )
 
         return response
 
     def alerts(self, aid=None, include_expired=True):
         """List all of the active alerts that the user created."""
         if aid:
-            func = '/shodan/alert/%s/info' % aid
+            func = "/shodan/alert/%s/info" % aid
         else:
-            func = '/shodan/alert/info'
+            func = "/shodan/alert/info"
 
-        response = api_request(self.api_key, func, params={
-            'include_expired': include_expired,
-        }, proxies=self._session.proxies)
+        response = api_request(
+            self.api_key,
+            func,
+            params={"include_expired": include_expired,},
+            proxies=self._session.proxies,
+        )
 
         return response
 
     def delete_alert(self, aid):
         """Delete the alert with the given ID."""
-        func = '/shodan/alert/%s' % aid
+        func = "/shodan/alert/%s" % aid
 
-        response = api_request(self.api_key, func, params={}, method='delete',
-                               proxies=self._session.proxies)
+        response = api_request(
+            self.api_key,
+            func,
+            params={},
+            method="delete",
+            proxies=self._session.proxies,
+        )
 
         return response
 
@@ -709,28 +719,45 @@ class Shodan:
 
         :returns: A list of triggers
         """
-        return self._request('/shodan/alert/triggers', {})
+        return self._request("/shodan/alert/triggers", {})
 
     def enable_alert_trigger(self, aid, trigger):
         """Enable the given trigger on the alert."""
-        return self._request('/shodan/alert/{}/trigger/{}'.format(aid, trigger), {}, method='put')
+        return self._request(
+            "/shodan/alert/{}/trigger/{}".format(aid, trigger), {}, method="put"
+        )
 
     def disable_alert_trigger(self, aid, trigger):
         """Disable the given trigger on the alert."""
-        return self._request('/shodan/alert/{}/trigger/{}'.format(aid, trigger), {}, method='delete')
+        return self._request(
+            "/shodan/alert/{}/trigger/{}".format(aid, trigger), {}, method="delete"
+        )
 
     def ignore_alert_trigger_notification(self, aid, trigger, ip, port):
         """Ignore trigger notifications for the provided IP and port."""
-        return self._request('/shodan/alert/{}/trigger/{}/ignore/{}:{}'.format(aid, trigger, ip, port), {}, method='put')
+        return self._request(
+            "/shodan/alert/{}/trigger/{}/ignore/{}:{}".format(aid, trigger, ip, port),
+            {},
+            method="put",
+        )
 
     def unignore_alert_trigger_notification(self, aid, trigger, ip, port):
         """Re-enable trigger notifications for the provided IP and port"""
-        return self._request('/shodan/alert/{}/trigger/{}/ignore/{}:{}'.format(aid, trigger, ip, port), {}, method='delete')
-    
+        return self._request(
+            "/shodan/alert/{}/trigger/{}/ignore/{}:{}".format(aid, trigger, ip, port),
+            {},
+            method="delete",
+        )
+
     def add_alert_notifier(self, aid, nid):
         """Enable the given notifier for an alert that has triggers enabled."""
-        return self._request('/shodan/alert/{}/notifier/{}'.format(aid, nid), {}, method='put')
-    
+        return self._request(
+            "/shodan/alert/{}/notifier/{}".format(aid, nid), {}, method="put"
+        )
+
     def remove_alert_notifier(self, aid, nid):
         """Remove the given notifier for an alert that has triggers enabled."""
-        return self._request('/shodan/alert/{}/notifier/{}'.format(aid, nid), {}, method='delete')
+        return self._request(
+            "/shodan/alert/{}/notifier/{}".format(aid, nid), {}, method="delete"
+        )
+
